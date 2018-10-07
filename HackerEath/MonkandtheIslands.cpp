@@ -1,3 +1,5 @@
+// Problema : https://www.hackerearth.com/practice/algorithms/graphs/breadth-first-search/practice-problems/algorithm/monk-and-the-islands/
+
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -7,12 +9,11 @@ int distancia[10001],ultimoNodo;
 void BFS(int nodo){
     queue<int> Q;
     memset(distancia,-1,sizeof(distancia) ); //llenar de '-1' a cada posicion del vector 'distancia', esto servirá para verificar si un nodo no fue visitado
-    Q.push(nodo);
+    Q.push(nodo);//insertar un dato a la cola
     distancia[nodo]=0;
     while(!Q.empty()){  //si la cola no esta vacia
-    
-        int nodoActual=Q.front();
-        Q.pop();
+        int nodoActual=Q.front();// obtener un dato de la cola
+        Q.pop();//eliminar un dato de la cola
         for(int i=0;i<grafo[nodoActual].size();i++){ //todos los nodos Hijo que tiene 'nodoActual'
             int nodoHijo=grafo[nodoActual][i];
             if(distancia[nodoHijo]==-1){  //si el nodo hijo no esta visitado
@@ -27,23 +28,19 @@ void BFS(int nodo){
 
 int main(){
     int casos,aristas,vertices,u,v;
-    
-    //cin>>casos;
-    scanf("%d",&casos);
+    scanf("%d",&casos);//cin>>casos;
     while(casos--){
         //cin>>vertices>>aristas; 
-        scanf("%d%d",&vertices,&aristas);//cantidad de nodos, cantidad de coneciones
+        scanf("%d%d",&vertices,&aristas);//cantidad de nodos, cantidad de conecciones
         ultimoNodo=vertices;
         for(int i=0;i<aristas;i++){
-            scanf("%d%d",&u,&v); ////existe una arista entre el nodo 'u' a 'v'
+            scanf("%d%d",&u,&v); //existe una arista entre el nodo 'u' a 'v'
             grafo[u].push_back(v);
-            grafo[v].push_back(u);  //cuando el grafo es no dirigido
+            grafo[v].push_back(u);  //cuando el grafo es no dirigido tambien hay una arista entre 'v' y 'u'
         }
         BFS(1);
-
-        //cout<<distancia[ultimoNodo]<<"\n";
-        printf("%d\n", distancia[ultimoNodo]);
-        for(int i=1;i<=vertices;i++)grafo[i].clear();
+        printf("%d\n", distancia[ultimoNodo]);//cout<<distancia[ultimoNodo]<<"\n";
+        for(int i=1;i<=vertices;i++)grafo[i].clear();// ya que tiene varios casos de prueba es necesario limpiar 'grafo'
     }
     return 0;
     
