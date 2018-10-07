@@ -1,98 +1,50 @@
 #include <bits/stdc++.h>
+
 using namespace std;
-struct _ { ios_base::Init i; _() { cin.sync_with_stdio(0); cin.tie(0);cout.tie(0); } } _;
+vector<int> grafo[10001];
+int distancia[10001],ultimoNodo;
 
-#define ict int t;cin>>t;while(t--)
-#define lct long long int t;cin>>t;while(t--)
-#define in(a) int a; cin>>a;
-#define llin(a) ll a; cin>>a;
-
-#define srep(i,a,b) for(ll i=a;i<b;i++)
-#define rep(i,n) for(ll i=0;i<n;i++)
-
-#define pb push_back
-
-typedef long long int ll; // [9,223,372,036,854,775,807 to -9.....808]
-typedef vector<int> vi;
-typedef vector<ll> vl;
-typedef vector<string> vs;
-typedef pair<int, int> pii;
-typedef pair<ll,ll> pll;
-typedef set<int> si;
-typedef set<ll> sl;
-typedef map<string, ll> mapsl;
-typedef map<string, int> mapsi;
-typedef map<int,int> mapii;
-typedef map<ll, ll> mapll;
-
-set<int> node[100009];
-bool visit[100009];
-ll bfs(int start,int ver,int dest)
-{
-    for(int i=0;i<=ver;i++)
-        visit[i]=false;
-    queue<pii> st;
-    st.push(make_pair(0,start));
-    visit[start]=true;
-    while(!st.empty())
-    {
-        int ind=st.front().second;
-        for(set <int>::iterator it = node[ind].begin();it != node[ind].end();++it)
-        {
-            int y=(*it);
-            if(y==dest)
-            return st.front().first+1;
-            if(visit[y]==false)
-            {
-                st.push(make_pair(st.front().first+1,y));
-                visit[y]=true;
+void BFS(int nodo){
+    queue<int> Q;
+    memset(distancia,-1,sizeof(distancia) ); //llenar de '-1' a cada posicion del vector 'distancia', esto servirá para verificar si un nodo no fue visitado
+    Q.push(nodo);
+    distancia[nodo]=0;
+    while(!Q.empty()){  //si la cola no esta vacia
+    
+        int nodoActual=Q.front();
+        Q.pop();
+        for(int i=0;i<grafo[nodoActual].size();i++){ //todos los nodos Hijo que tiene 'nodoActual'
+            int nodoHijo=grafo[nodoActual][i];
+            if(distancia[nodoHijo]==-1){  //si el nodo hijo no esta visitado
+                distancia[nodoHijo]=distancia[nodoActual]+1;//aumentar la distancia en uno para el nodo Hijo
+                if(distancia[ultimoNodo]!=-1)return;    //distancia ya encontrada 
+                Q.push(nodoHijo);
             }
         }
-        st.pop();
     }
-return -1;
+    return;
 }
 
-
-int main()
-{
-    bool chk[100005]={0};
-    int t;
-    //cin>>t;
-    scanf("%d",&t);
-    while(t--)
-    {
-        int dest;
-        //cin>>dest;
-        scanf("%d",&dest);
-        int q;
-        //cin>>q;
-        scanf("%d",&q);
-        int n=1;
-        int x,y,d;
-        memset(chk,0,100005);
-        for(int i=0;i<q;i++)
-        {
-            //cin>>x>>y;
-            scanf("%d%d",&x,&y);
-            if(chk[x]==false)
-            {
-                node[x].clear();
-                chk[x]=true;
-            }
-            if(chk[y]==false)
-            {
-                node[y].clear();
-                chk[y]=true;
-            }
-
-            node[x].insert(y);
-            node[y].insert(x);
-            n=max(n,max(x,y));
-            visit[i]=false;
+int main(){
+    int casos,aristas,vertices,u,v;
+    
+    //cin>>casos;
+    scanf("%d",&casos);
+    while(casos--){
+        //cin>>vertices>>aristas; 
+        scanf("%d%d",&vertices,&aristas);//cantidad de nodos, cantidad de coneciones
+        ultimoNodo=vertices;
+        for(int i=0;i<aristas;i++){
+            scanf("%d%d",&u,&v); ////existe una arista entre el nodo 'u' a 'v'
+            grafo[u].push_back(v);
+            grafo[v].push_back(u);  //cuando el grafo es no dirigido
         }
+        BFS(1);
 
-        //cout<<bfs(1,n,dest)<<endl;
-        printf("%d\n",bfs(1,n,dest));
+        //cout<<distancia[ultimoNodo]<<"\n";
+        printf("%d\n", distancia[ultimoNodo]);
+        for(int i=1;i<=vertices;i++)grafo[i].clear();
     }
+    return 0;
+    
 }
